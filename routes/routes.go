@@ -10,8 +10,16 @@ import (
 func SetupRouter(app *fiber.App) {
 	app.Post("/register", handler.Register)
 	app.Post("/login", handler.Login)
+
+	// Product
+	app.Get("/product", handler.GetProduct)
+	app.Get("/product/:id", handler.GetByIdProduct)
+
+	// static folder
+	app.Static("/", "./public")
 }
 
 func AutoMigrate() {
 	RunMigrate(&entity.Users{})
+	RunMigrate(&entity.Product{})
 }
