@@ -14,6 +14,7 @@ func SetupRouter(app *fiber.App) {
 	// Product
 	app.Get("/product", handler.GetProduct)
 	app.Get("/product/:id", handler.GetByIdProduct)
+	app.Delete("/product/:id", handler.DeleteProduct)
 
 	// static folder
 	app.Static("/", "./public")

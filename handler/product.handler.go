@@ -67,19 +67,34 @@ func GetByIdProduct(c *fiber.Ctx) error {
 }
 
 func CreateProduct(c *fiber.Ctx) error {
-  productRequest := new(request.ProductRequest)
-
-  productRequest.Title = c.FormValue("title")
-  productRequest.Description = c.FormValue("description")
-  productRequest.Price = c.FormValue("price")
-
-  ImageCover, err := c.FormFile("image")
-  if err == nil {
-    filename := ImageCover.Filename
-    productRequest.Image = fmt.Sprintf("/image/product/%s", filename)
-    if err := c.SaveFile(ImageCover, fmt.Sprint("./public/%s"), productRequest); 
-    err
-  }
+	// productRequest := new(request.ProductRequest)
+	//
+	// productRequest.Title = c.FormValue("title")
+	// productRequest.Description = c.FormValue("description")
+	// productRequest.Price = c.FormValue("price")
+	//
+	// ImageCover, err := c.FormFile("image")
+	// if err == nil {
+	//   filename := ImageCover.Filename
+	//   productRequest.Image = fmt.Sprintf("/image/product/%s", filename)
+	//   if err := c.SaveFile(ImageCover, fmt.Sprint("./public/%s"), productRequest);
+	// }
 
 	return nil
+}
+
+func DeleteProduct(c *fiber.Ctx) error {
+	productId := c.Params("id")
+
+	result := database.DB.Delete(&entity.Product{}, productId)
+
+	if result.Error != nil || result.RowsAffected == 0 {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Internal Server Error",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success delete product",
+	})
 }
